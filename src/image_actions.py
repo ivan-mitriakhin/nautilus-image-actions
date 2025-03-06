@@ -23,10 +23,12 @@ class ImageActionsMenuProvider(GObject.GObject, Nautilus.MenuProvider):
             file_path = self._get_file_path(file)
             root, _ = os.path.splitext(file_path)
             
+            destination_file_path = f"{root}_rembg.png"
+            
             # Remove background and save in png format
             with Image.open(file_path) as image:
                 image = remove(image, session=session)
-                image.save(f"{root}.png")
+                image.save(destination_file_path)
     
     def convert_format(
         self,
@@ -34,8 +36,6 @@ class ImageActionsMenuProvider(GObject.GObject, Nautilus.MenuProvider):
         files: list[Nautilus.FileInfo],
         to_format: str,
     ) -> None:
-        # TODO: Check for existence of such files: {root}.{to_format}, if exist => don't convert
-        # TODO: Batch processing ???
         for file in files:
             # Skip files for which format conversion isn't needed
             from_format = file.get_mime_type().split('/')[1]
@@ -46,9 +46,11 @@ class ImageActionsMenuProvider(GObject.GObject, Nautilus.MenuProvider):
             file_path = self._get_file_path(file)
             root, _ = os.path.splitext(file_path)
             
+            destination_file_path = f"{root}.{to_format}"
+                
             # Convert to specified format
             with Image.open(file_path) as image:
-                image.save(f"{root}.{to_format}")
+                image.save(destination_file_path)
     
     def get_file_items(
         self,
@@ -58,11 +60,6 @@ class ImageActionsMenuProvider(GObject.GObject, Nautilus.MenuProvider):
         for file in files:
             if file.get_mime_type() not in self.SUPPORTED_MIME_TYPES:
                 return []
-            
-        # ????? Maybe implement the top-level menu (Image Actions)
-        # ????? Think of the following comments in a dropdown way (e.g., Select Item -> Item)
-        # ????? Image Actions -> Remove Background
-        # ????? Image Actions -> Convert to -> Format
         
         # Initialize and activate menu item for background removal
         bg_removal_menu_item = Nautilus.MenuItem(
@@ -98,12 +95,19 @@ class ImageActionsMenuProvider(GObject.GObject, Nautilus.MenuProvider):
         self,
         menu_item: Nautilus.MenuItem,
     ) -> None:
-        # Create menu item based on format (for every supported format)
-        # and append it to the submenu attached to the given menu item
+        """Create menu item based on format for every supported format
+        and append it to the submenu attached to the given menu item.
+
+        Args:
+            menu_item (Nautilus.MenuItem): Menu item with attached submenu.
+
+        Raises:
+            TypeError: The menu item that you pass to this method must have a defined submenu (Nautilus.Menu).
+        """
         menu = menu_item.props.menu
         
         if not menu:
-            raise TypeError("NoneType encountered. Menu item must have a defined submenu (Nautilus.Menu).")
+            raise TypeError("NoneType encountered. The menu item that you pass to this method must have a defined submenu (Nautilus.Menu).")
         
         for mime_type in self.SUPPORTED_MIME_TYPES:
             file_format = mime_type.split('/')[1]
@@ -117,5 +121,13 @@ class ImageActionsMenuProvider(GObject.GObject, Nautilus.MenuProvider):
         self,
         file: Nautilus.FileInfo,
     ) -> str:
+        """Parse file uri into string.
+
+        Args:
+            file (Nautilus.FileInfo): A nautilus file object.
+
+        Returns:
+            str: Parsed string.
+        """
         return unquote(urlparse(file.get_uri()).path)
     
