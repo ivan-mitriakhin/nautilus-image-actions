@@ -27,18 +27,14 @@ cd /nautilus-image-actions
 - ##### Ubuntu / Debian
 
 ```
-
 sudo apt install python3-gi python3-gi-cairo gir1.2-gtk-4.0 nautilus-python
-
 ```
 
 - ##### Fedora
 
 ```
-
 sudo dnf install gcc gobject-introspection-devel cairo-gobject-devel \ 
             pkg-config python3-devel gtk4 nautilus-python
-
 ```
 
 ##### 3. Install the required python libriares:
@@ -47,12 +43,10 @@ sudo dnf install gcc gobject-introspection-devel cairo-gobject-devel \
 pip3 install -U pip
 
 pip3 install -r requirements.txt
-
 ```
 
 ##### 4. Run the bash script:
 
-```
-
+```s
 sh ./run.sh
 ```
