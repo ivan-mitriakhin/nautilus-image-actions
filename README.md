@@ -1,18 +1,11 @@
-# 📦️ Installation  
+# Dependencies  
 
-##### Ubuntu / Debian
+- Python3
+- PyGObject
+- Python-Nautilus
+- Nautilus
 
-```
-Not implemented yet.
-```
-
-##### Fedora
-
-```
-Not implemented yet.
-```
-
-# Manual installation  
+# Installation
 
 ##### 1. Let's clone the repo and change the directory:
 
@@ -27,13 +20,14 @@ cd /nautilus-image-actions
 - ##### Ubuntu / Debian
 
 ```
-sudo apt install python3-gi python3-gi-cairo gir1.2-gtk-4.0 nautilus-python
+sudo apt install libcairo2-dev pkg-config python3-dev python3-gi \
+            python3-gi-cairo gir1.2-gtk-4.0 python3-nautilus
 ```
 
 - ##### Fedora
 
 ```
-sudo dnf install gcc gobject-introspection-devel cairo-gobject-devel \ 
+sudo dnf install gcc gobject-introspection-devel cairo-gobject-devel \
             pkg-config python3-devel gtk4 nautilus-python
 ```
 
@@ -47,6 +41,6 @@ pip3 install -r requirements.txt
 
 ##### 4. Run the bash script:
 
-```s
+```
 sh ./run.sh
 ```
